@@ -36,13 +36,35 @@ def main():
             if key_lst[pg.K_LEFT]: move_sum[0] -= 5
             if key_lst[pg.K_RIGHT]: move_sum[0] += 5
         screen.blit(bg_img, [0, 0])
+        kk_side = inside(kk_rect)
+        if not kk_side[0]:
+            move_sum[1] = -move_sum[1]
+        if not kk_side[1]:
+            move_sum[0] = -move_sum[0]
         kk_rect.move_ip(move_sum)
         screen.blit(kk_img, kk_rect)
+        bomb_side = inside(bomb_rect)
+        if not bomb_side[0]:
+            vy = vy * -1
+        elif not bomb_side[1]:
+            vx = vx * -1
         bomb_rect.move_ip(vx,vy)
         screen.blit(bomb,bomb_rect)
         pg.display.update()
         tmr += 1
         clock.tick(100)
+
+
+def inside(img_rect):
+    # 上下左右の順に画面内か調べる関数
+    # 引数：各イメージのRect
+    # 戻り値：画面内ならtrue,画面外ならfalse
+    yoko,tate = True,True
+    if (img_rect.top < 0.0)or(HEIGHT < img_rect.bottom):
+        tate = False
+    if (img_rect.left < 0.0)or(WIDTH < img_rect.right):
+        yoko = False
+    return [tate,yoko]
 
 
 if __name__ == "__main__":
