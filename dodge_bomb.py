@@ -12,6 +12,14 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_img_ue = pg.transform.rotozoom(kk_img,-90,1.0)
+    kk_img_sita = pg.transform.rotozoom(kk_img,90,1.0)
+    kk_img_hidariue = pg.transform.rotozoom(kk_img,-45,1.0)
+    kk_img_hidarisita = pg.transform.rotozoom(kk_img,45,1.0)
+    kk_img_migi = pg.transform.flip(kk_img,True,False)
+    kk_img_migiue = pg.transform.rotozoom(kk_img_migi,-45,1.0)
+    kk_img_migisita = pg.transform.rotozoom(kk_img_migi,45,1.0)
+    kk_imgs = [kk_img,kk_img_hidarisita,kk_img_sita,kk_img_migisita,kk_img_migi,kk_img_migiue,kk_img_ue,kk_img_hidariue]
     kk_rect = kk_img.get_rect()
     kk_rect.center= 900,400
     clock = pg.time.Clock()
@@ -29,8 +37,8 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-            move_sum = [0, 0]
             key_lst = pg.key.get_pressed()
+            move_sum = [0, 0]
             if key_lst[pg.K_UP]: move_sum[1] -= 5
             if key_lst[pg.K_DOWN]: move_sum[1] += 5
             if key_lst[pg.K_LEFT]: move_sum[0] -= 5
@@ -42,7 +50,8 @@ def main():
         if not kk_side[1]:
             move_sum[0] = -move_sum[0]
         kk_rect.move_ip(move_sum)
-        screen.blit(kk_img, kk_rect)
+        muki = koukakunn_muki(move_sum)
+        screen.blit(kk_imgs[muki], kk_rect)
         bomb_side = inside(bomb_rect)
         if not bomb_side[0]:
             vy = vy * -1
@@ -69,6 +78,31 @@ def inside(img_rect):
         yoko = False
     return [tate,yoko]
 
+def koukakunn_muki(muki):
+    # こうかくんの向きから画像選択する関数
+    # 引数：移動方向のリスト
+    # 戻り値：画像番号
+    if muki[0] == -5:
+        if muki[1] == -5:
+            return 7
+        elif muki[1] == 0:
+            return 0
+        elif muki[1] == 5:
+            return 1
+    elif muki[0] == 0:
+        if muki[1] == -5:
+            return 6
+        elif muki[1] == 0:
+            return 0
+        elif muki[1] == 5:
+            return 2
+    else:
+        if muki[1] == -5:
+            return 5
+        elif muki[1] == 0:
+            return 4
+        elif muki[1] == 5:
+            return 3
 
 if __name__ == "__main__":
     pg.init()
