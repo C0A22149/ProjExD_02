@@ -100,7 +100,7 @@ def kyori(moto_rect,saki_rect,muki):
     X_v = saki_X - moto_X
     Y_v = saki_Y - moto_Y
     norum = X_v**2 + Y_v**2
-    norum = norum**(1/2)
+    norum = norum**(1/2)# norum：爆弾とこうかとんとの距離
     if norum <= 500:
         moto_rect.move_ip(muki[0],muki[1])
         return
@@ -110,7 +110,6 @@ def kyori(moto_rect,saki_rect,muki):
     n_Y = n_Y*(50**(1/2))
     moto_rect.move_ip(n_X,n_Y)
     return
-
 
 
 def koukakunn_muki(muki):
