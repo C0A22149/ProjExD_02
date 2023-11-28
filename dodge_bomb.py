@@ -50,6 +50,9 @@ def main():
             vx = vx * -1
         bomb_rect.move_ip(vx,vy)
         screen.blit(bomb,bomb_rect)
+        if bomb_rect.colliderect(kk_rect):
+            print("GameOver")
+            return
         pg.display.update()
         tmr += 1
         clock.tick(100)
