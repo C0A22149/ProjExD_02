@@ -31,6 +31,7 @@ def main():
     bomb.set_colorkey((0,0,0))
     bomb_rect = bomb.get_rect()
     bomb_rect.center = bomb_place
+    accs = [i for i in range(1,11)]
     tmr = 0
     vx,vy = +5,+5
     while True:
@@ -44,6 +45,18 @@ def main():
             if key_lst[pg.K_LEFT]: move_sum[0] -= 5
             if key_lst[pg.K_RIGHT]: move_sum[0] += 5
         screen.blit(bg_img, [0, 0])
+
+        bomb_side = inside(bomb_rect)
+        if not bomb_side[0]:
+            vy = vy * -1
+        elif not bomb_side[1]:
+            vx = vx * -1
+        avx, avy = vx*accs[min(tmr//500, 9)], vy*accs[min(tmr//500, 9)]
+        vv = [avx,avy]
+        kyori(bomb_rect,kk_rect,vv)
+        screen.blit(bomb,bomb_rect)
+
+
         kk_side = inside(kk_rect)
         if not kk_side[0]:
             move_sum[1] = -move_sum[1]
@@ -52,14 +65,12 @@ def main():
         kk_rect.move_ip(move_sum)
         muki = koukakunn_muki(move_sum)
         screen.blit(kk_imgs[muki], kk_rect)
-        bomb_side = inside(bomb_rect)
-        if not bomb_side[0]:
-            vy = vy * -1
-        elif not bomb_side[1]:
-            vx = vx * -1
-        bomb_rect.move_ip(vx,vy)
-        screen.blit(bomb,bomb_rect)
+
         if bomb_rect.colliderect(kk_rect):
+            for i in range(8):
+                screen.blit(kk_imgs[i],kk_rect)
+                clock.tick(20)
+                pg.display.update()
             print("GameOver")
             return
         pg.display.update()
@@ -77,6 +88,31 @@ def inside(img_rect):
     if (img_rect.left < 0.0)or(WIDTH < img_rect.right):
         yoko = False
     return [tate,yoko]
+
+
+def kyori(moto_rect,saki_rect,muki):
+    # 爆弾とこうかとんの距離を計算し、近づくためのベクトルを出す関数
+    # 引数：爆弾のRectとこうかとんのRect、爆弾のベクトル
+    # 戻り値：こうかとんへのベクトル、距離が500未満ならFalse
+    moto_X = moto_rect.centerx
+    moto_Y = moto_rect.centery
+    saki_X = saki_rect.centerx
+    saki_Y = saki_rect.centery
+    X_v = saki_X - moto_X
+    Y_v = saki_Y - moto_Y
+    norum = X_v**2 + Y_v**2
+    norum = norum**(1/2)
+    n_X = X_v/norum
+    n_Y = Y_v/norum
+    n_X = n_X*(50**(1/2))
+    n_Y = n_Y*(50**(1/2))
+    if norum <= 500:
+        moto_rect.move_ip(n_X,n_Y)
+        return
+    moto_rect.move_ip(n_X,n_Y)
+    return
+
+
 
 def koukakunn_muki(muki):
     # こうかくんの向きから画像選択する関数
