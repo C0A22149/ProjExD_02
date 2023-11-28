@@ -19,18 +19,20 @@ def main():
     bomb = pg.Surface((bomb_harf*2,bomb_harf*2))
     pg.draw.circle(bomb,(255,0,0),(bomb_harf,bomb_harf),bomb_harf)
     bomb.set_colorkey((0,0,0))
+    bomb_rect = bomb.get_rect()
     tmr = 0
+    vx,vy = +5,+5
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
-        screen.blit(bomb,bomb_place)
+        bomb_rect.move_ip(vx,vy)
+        screen.blit(bomb,bomb_rect)
         pg.display.update()
         tmr += 1
-        clock.tick(10)
+        clock.tick(100)
 
 
 if __name__ == "__main__":
