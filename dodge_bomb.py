@@ -46,6 +46,15 @@ def main():
             if key_lst[pg.K_RIGHT]: move_sum[0] += 5
         screen.blit(bg_img, [0, 0])
 
+        kk_side = inside(kk_rect)
+        if not kk_side[0]:
+            move_sum[1] = -move_sum[1]
+        if not kk_side[1]:
+            move_sum[0] = -move_sum[0]
+        kk_rect.move_ip(move_sum)
+        muki = koukakunn_muki(move_sum)
+        screen.blit(kk_imgs[muki], kk_rect)
+
         bomb_side = inside(bomb_rect)
         if not bomb_side[0]:
             vy = vy * -1
@@ -55,16 +64,6 @@ def main():
         vv = [avx,avy]
         kyori(bomb_rect,kk_rect,vv)
         screen.blit(bomb,bomb_rect)
-
-
-        kk_side = inside(kk_rect)
-        if not kk_side[0]:
-            move_sum[1] = -move_sum[1]
-        if not kk_side[1]:
-            move_sum[0] = -move_sum[0]
-        kk_rect.move_ip(move_sum)
-        muki = koukakunn_muki(move_sum)
-        screen.blit(kk_imgs[muki], kk_rect)
 
         if bomb_rect.colliderect(kk_rect):
             for i in range(8):
@@ -102,13 +101,13 @@ def kyori(moto_rect,saki_rect,muki):
     Y_v = saki_Y - moto_Y
     norum = X_v**2 + Y_v**2
     norum = norum**(1/2)
+    if norum <= 500:
+        moto_rect.move_ip(muki[0],muki[1])
+        return
     n_X = X_v/norum
     n_Y = Y_v/norum
     n_X = n_X*(50**(1/2))
     n_Y = n_Y*(50**(1/2))
-    if norum <= 500:
-        moto_rect.move_ip(n_X,n_Y)
-        return
     moto_rect.move_ip(n_X,n_Y)
     return
 
